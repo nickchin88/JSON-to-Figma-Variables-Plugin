@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+    
+    h2 {
+      margin: 24px 0 12px 0;
+      font-size: 16px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
+    }
+    
+    .section {
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #f9fafb;
+    }
+    
+    .upload-area:hover {
+      border-color: #667eea;
+      background: #f3f4f6;
+    }
+    
+    .upload-area.dragover {
+      border-color: #667eea;
+      background: #eef2ff;
+    }
+    
+    .upload-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      color: #9ca3af;
+    }
+    
+    .upload-text {
+      font-size: 14px;
+      color: #374151;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .upload-hint {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    input[type="file"] {
+      display: none;
+    }
+    
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .radio-option:hover {
+      border-color: #667eea;
+      background: #f9fafb;
+    }
+    
+    .radio-option.selected {
+      border-color: #667eea;
+      background: #eef2ff;
+    }
+    
+    .radio-option input[type="radio"] {
+      margin-top: 2px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+    
+    .radio-label {
+      flex: 1;
+    }
+    
+    .radio-title {
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    
+    .radio-description {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .collection-list {
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: 8px;
+      padding: 8px;
+      background: #f9fafb;
+      border-radius: 6px;
+    }
+    
+    .collection-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+      border: 2px solid transparent;
+    }
+    
+    .collection-item:hover {
+      background: #e5e7eb;
+    }
+    
+    .collection-item.selected {
+      background: #dbeafe;
+      border-color: #3b82f6;
+    }
+    
+    .collection-name {
+      font-weight: 500;
+      color: #1a1a1a;
+      font-size: 14px;
+    }
+    
+    .collection-modes {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+    
+    .new-collection-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-top: 8px;
+      font-family: inherit;
+    }
+    
+    .new-collection-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    .primary:hover:not(:disabled) {
+      background: #5568d3;
+    }
+    
+    .secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    
+    .secondary:hover {
+      background: #d1d5db;
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .message.show {
+      display: block;
+    }
+    
+    .message.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+    
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+    
+    .file-info {
+      background: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #374151;
+      display: none;
+    }
+    
+    .file-info.show {
+      display: block;
+    }
+    
+    .color-count {
+      font-weight: 600;
+      color: #667eea;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Import SCSS Color Variables</h1>
+    <p class="subtitle">Upload your generated JSON file and choose where to import the variables</p>
+    
+    <div id="message" class="message"></div>
+    
+    <!-- Step 1: Upload File -->
+    <div class="section">
+      <h2>1. Upload JSON File</h2>
+      <div id="fileInfo" class="file-info"></div>
+      
+      <div id="uploadArea" class="upload-area">
+        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+        </svg>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">JSON file generated from the converter</div>
+      </div>
+      
+      <input type="file" id="fileInput" accept=".json" />
+    </div>
+    
+    <!-- Step 2: Choose Collection -->
+    <div id="collectionSection" class="section">
+      <h2>2. Choose Variable Collection</h2>
+      
+      <div class="radio-group">
+        <label class="radio-option" id="newCollectionOption">
+          <input type="radio" name="collection" value="new" checked>
+          <div class="radio-label">
+            <div class="radio-title">Create New Collection</div>
+            <div class="radio-description">Create a new variable collection for these colors</div>
+            <input 
+              type="text" 
+              id="newCollectionName" 
+              class="new-collection-input" 
+              placeholder="Collection name (e.g., Brand Colors)"
+              value="Brand Colors"
+            >
+          </div>
+        </label>
+        
+        <label class="radio-option" id="existingCollectionOption">
+          <input type="radio" name="collection" value="existing">
+          <div class="radio-label">
+            <div class="radio-title">Use Existing Collection</div>
+            <div class="radio-description">Add variables to an existing collection</div>
+            <div id="collectionList" class="collection-list hidden"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+    
+    <!-- Import Button -->
+    <div class="button-group">
+      <button id="importBtn" class="primary">Import Variables</button>
+      <button id="cancelBtn" class="secondary">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    let jsonData = null;
+    let collections = [];
+    let selectedCollectionId = null;
+    
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const importBtn = document.getElementById('importBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const message = document.getElementById('message');
+    const fileInfo = document.getElementById('fileInfo');
+    const collectionSection = document.getElementById('collectionSection');
+    const collectionList = document.getElementById('collectionList');
+    const newCollectionName = document.getElementById('newCollectionName');
+    const newCollectionOption = document.getElementById('newCollectionOption');
+    const existingCollectionOption = document.getElementById('existingCollectionOption');
+    
+    // Radio button handling
+    document.querySelectorAll('input[name="collection"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+        e.target.closest('.radio-option').classList.add('selected');
+        
+        if (e.target.value === 'existing') {
+          collectionList.classList.remove('hidden');
+        } else {
+          collectionList.classList.add('hidden');
+          selectedCollectionId = null;
+        }
+      });
+    });
+    
+    // File upload handling
+    uploadArea.onclick = () => fileInput.click();
+    
+    uploadArea.ondragover = (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    };
+    
+    uploadArea.ondragleave = () => {
+      uploadArea.classList.remove('dragover');
+    };
+    
+    uploadArea.ondrop = (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) handleFile(file);
+    };
+    
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) handleFile(file);
+    };
+    
+    function handleFile(file) {
+      if (!file.name.endsWith('.json')) {
+        showMessage('Please upload a JSON file', 'error');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          jsonData = JSON.parse(e.target.result);
+          
+          if (!jsonData.modes || !jsonData.modes.light || !jsonData.modes.dark) {
+            throw new Error('Invalid JSON format. Expected "modes" with "light" and "dark".');
+          }
+          
+          const lightCount = Object.keys(jsonData.modes.light).length;
+          const darkCount = Object.keys(jsonData.modes.dark).length;
+          
+          fileInfo.innerHTML = `<strong>${file.name}</strong><br>Light mode: <span class="color-count">${lightCount}</span> variables | Dark mode: <span class="color-count">${darkCount}</span> variables`;
+          fileInfo.classList.add('show');
+          
+          showMessage('File loaded successfully! Choose a collection below and click "Import Variables".', 'success');
+          
+        } catch (error) {
+          showMessage('Error parsing JSON: ' + error.message, 'error');
+          jsonData = null;
+        }
+      };
+      reader.readAsText(file);
+    }
+    
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = `message ${type} show`;
+    }
+    
+    function renderCollections(collectionsData) {
+      collections = collectionsData;
+      collectionList.innerHTML = '';
+      
+      if (collections.length === 0) {
+        collectionList.innerHTML = '<div style="padding: 8px; color: #6b7280; font-size: 13px;">No existing collections found</div>';
+        return;
+      }
+      
+      collections.forEach(col => {
+        const item = document.createElement('div');
+        item.className = 'collection-item';
+        item.innerHTML = `
+          <div class="collection-name">${col.name}</div>
+          <div class="collection-modes">${col.modes.length} mode(s): ${col.modes.map(m => m.name).join(', ')}</div>
+        `;
+        item.onclick = () => {
+          document.querySelectorAll('.collection-item').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedCollectionId = col.id;
+          
+          // Select the existing collection radio
+          document.querySelector('input[name="collection"][value="existing"]').checked = true;
+          document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+          existingCollectionOption.classList.add('selected');
+          collectionList.classList.remove('hidden');
+        };
+        collectionList.appendChild(item);
+      });
+    }
+    
+    importBtn.onclick = () => {
+      if (!jsonData) return;
+      
+      const collectionChoice = document.querySelector('input[name="collection"]:checked').value;
+      
+      if (collectionChoice === 'existing' && !selectedCollectionId) {
+        showMessage('Please select an existing collection', 'error');
+        return;
+      }
+      
+      importBtn.disabled = true;
+      importBtn.textContent = 'Importing...';
+      
+      parent.postMessage({ 
+        pluginMessage: { 
+          type: 'import-colors', 
+          data: jsonData,
+          collectionChoice: collectionChoice === 'new' ? 'new' : selectedCollectionId,
+          newCollectionName: newCollectionName.value || 'Brand Colors'
+        } 
+      }, '*');
+    };
+    
+    cancelBtn.onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+    };
+    
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      
+      if (msg.type === 'collections-loaded') {
+        renderCollections(msg.collections);
+      } else if (msg.type === 'import-complete') {
+        showMessage(`Successfully imported ${msg.count} color variables into "${msg.collectionName}"!`, 'success');
+        importBtn.textContent = 'Import Complete';
+        setTimeout(() => {
+          parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+        }, 2000);
+      } else if (msg.type === 'import-error') {
+        showMessage('Error: ' + msg.error, 'error');
+        importBtn.disabled = false;
+        importBtn.textContent = 'Import Variables';
+      }
+    };
+    
+    // Initialize first option as selected
+    newCollectionOption.classList.add('selected');
+  </script>
+</body>
+</html>
